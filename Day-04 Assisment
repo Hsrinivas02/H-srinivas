@@ -1,0 +1,103 @@
+testcase1
+
+public class TextFieldCount {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		WebDriver driver = new EdgeDriver();
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
+		driver.navigate().to("https://www.facebook.com/");
+		
+		//count of all the text fields
+		List<WebElement> text = driver.findElements(By.tagName("input"));
+		System.out.println(text.size());
+		
+		//entering data into a text field
+		for(WebElement ele : text)
+		{
+			System.out.println(ele.getAccessibleName());
+			if (ele.getAccessibleName().equals("Password"))
+			{
+				ele.sendKeys("srinu");
+			}	
+		}
+    driver.quit();
+	}
+
+}
+
+testcase2
+
+public class Zomoto {
+
+	public static void main(String[] args) throws InterruptedException {
+		// TODO Auto-generated method stub
+		WebDriver driver = new EdgeDriver();
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
+		driver.navigate().to("https://www.zomato.com/bangalore/delivery");
+		Thread.sleep(2000);
+		
+		//clicking on log button
+		driver.findElement(By.xpath("//button[text()='Log in']")).click();
+		
+		//switching driver control to the log in page
+		WebElement number = driver.findElement(By.id("auth-login-ui"));
+		driver.switchTo().frame(number);
+		
+		//entering the data
+		driver.findElement(By.xpath("//input[@type='number']")).sendKeys("7338186008");
+		
+		//switching driver control back to the main page
+		driver.switchTo().defaultContent();
+		
+		//verifying the driver control
+		System.out.println(driver.findElement(By.xpath("//div[text()='Delivery']")).getText());
+		Thread.sleep(3000);
+		
+		driver.quit();
+
+	}
+
+}
+
+Testcase03
+
+import java.time.Duration;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class bigbasket {
+	public static void main(String[] args) throws InterruptedException {
+		WebDriver driver = new ChromeDriver();
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+		driver.get("https://www.bigbasket.com/");
+		Thread.sleep(3000);
+		driver.findElement(By.xpath("(//input[@type='text'])[2]")).sendKeys("yogurt");;
+		Thread.sleep(4000);
+		WebElement add = driver.findElement(By.xpath("//button[text()='Add']"));
+		add.click();
+		Thread.sleep(5000);
+		WebElement add1 = driver.findElement(By.xpath("(//button[text()='Add'])[5]"));
+		add1.click();
+		Thread.sleep(2000);
+		String text = driver.findElement(By.xpath("//span[@class='sc-fUnMCh cDZjuK']")).getText();
+		if(!text.equals(""))
+		{
+			System.out.println("added to cart");
+			System.out.println(text+" products are added to cart");
+		}
+		else
+		{
+			System.out.println("not added to cart");
+		}
+		Thread.sleep(2000);
+		driver.quit();
+	}
+}
