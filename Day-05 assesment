@@ -1,0 +1,147 @@
+Task-01
+
+sample properties
+browser chrome
+url https://demowebshop.tricentis.com/
+id srinivas05@gmail.com
+password srinivas123
+
+code
+package frames;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.time.Duration;
+import java.util.Properties;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+public class webapp {
+
+	public static void main(String[] args) throws IOException {
+		FileInputStream fl=new FileInputStream("./src/test/resources/maven/sample.properties");
+		Properties p= new Properties();
+		p.load(fl);
+		System.out.println(p.getProperty("browser"));
+		System.out.println(p.getProperty("url"));
+		System.out.println(p.getProperty("id"));
+		System.out.println(p.getProperty("password"));
+		
+		String browser = (p.getProperty("browser"));
+		String url = (p.getProperty("url"));
+		String id = (p.getProperty("id"));
+		String password = (p.getProperty("password"));
+		
+		WebDriver driver=null;`
+		if(browser.equals("chrome")) {
+			driver=new ChromeDriver();
+		}
+		if(browser.equals("edge")) {
+			driver=new EdgeDriver();
+		}
+		if(browser.equals("Firefox"))e {
+			driver=new FirefoxDriver();
+		}
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+		driver.get(url);
+		driver.findElement(By.xpath("//a[text()='Log in']")).click();
+		driver.findElement(By.id("Email")).sendKeys(id);
+		driver.findElement(By.id("Password")).sendKeys(password);
+	}
+
+}
+
+Task-02
+package frames;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.time.Duration;
+import java.util.Properties;
+
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+
+public class excel1 {
+
+	public static void main(String[] args) throws EncryptedDocumentException, IOException {
+	FileInputStream fl=new FileInputStream("./src/test/resources/maven/excelsample.xlxs.xlsx");
+			Workbook w= WorkbookFactory.create(fl);
+			 Sheet sh = w.getSheet("Sheet1");
+				Row row = sh.getRow(1);
+				 Cell cell = row.getCell(2);
+				 System.out.println(cell.getStringCellValue());
+				 String browser = sh.getRow(1).getCell(0).getStringCellValue();
+				 String url = sh.getRow(1).getCell(1).getStringCellValue();
+				 String username = sh.getRow(1).getCell(2).getStringCellValue();
+				 String password = sh.getRow(1).getCell(3).getStringCellValue();
+				 
+				 WebDriver driver=null;
+				 if(browser.equals("chrome")) {
+					 driver=new ChromeDriver();
+				 }
+				 if(browser.equals("edge")) {
+					 driver=new EdgeDriver();
+				 }
+				 if(browser.equals("Firefox")) {
+					 driver=new FirefoxDriver();
+				 }
+				 
+				 driver.manage().window().maximize();
+				 driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+				 driver.get(url);
+				 driver.findElement(By.xpath("//input[@name='username']")).sendKeys(username);
+				 driver.findElement(By.xpath("//input[@name='password']")).sendKeys(password);
+				 driver.findElement(By.xpath("//button[@type='submit']")).click();
+
+	}
+
+}
+
+TAsk 03
+
+{
+  "browser": "chrome",
+  "url": "https://demoapps.qspiders.com/user-management/register",
+  "username": "srinivas",
+  "fullName": "H srinivas",
+  "Email": "sinujohn05@gmail.com",
+  "password": "sinu@123"
+}
+
+code
+FileReader fir=new FileReader("src/test/resources/DDT/properties.json");
+        JSONParser jsonParser=new JSONParser();
+        Object obj=jsonParser.parse(fir);
+        JSONObject json= (JSONObject) obj;
+
+        String browser = json.get("browser").toString();
+        String url = json.get("url").toString();
+        String username = json.get("username").toString();
+        String fullName = json.get("fullName").toString();
+        String email = json.get("Email").toString();
+        String password=json.get("password").toString();
+
+        WebDriver driver=new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        driver.get(url);
+        driver.findElement(By.id("username")).sendKeys(username);
+        driver.findElement(By.id("fullname")).sendKeys(fullName);
+        driver.findElement(By.id("email")).sendKeys(email);
+        driver.findElement(By.id("password")).sendKeys(password);
+        Thread.sleep(2000);
+        driver.findElement(By.id("submit")).click();
