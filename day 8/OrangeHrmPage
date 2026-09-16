@@ -1,0 +1,98 @@
+package PomImpementation;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.time.Duration;
+import java.util.Properties;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+
+import PomUtilities.OrangeHrmCandidatesPage;
+import PomUtilities.OrangeHrmHomepage;
+import PomUtilities.OrangeHrmLoginpage;
+import PomUtilities.OrangeHrmRecruitmentPage;
+
+public class Day8_assessment {
+
+	public static void main(String[] args) throws IOException, InterruptedException {
+		// TODO Auto-generated method stub
+		FileInputStream fis=new FileInputStream("./src/test/resources/DDT/orangeHRM.properties");
+		Properties p=new Properties();
+		p.load(fis);
+		String BROWSER=p.getProperty("Browser");
+		String URL=p.getProperty("URL");
+		String username = p.getProperty("username");
+		String pass=p.getProperty("Password");
+		WebDriver driver=null;
+		if(BROWSER.contains("chrome"))
+		{
+			driver= new ChromeDriver();
+		}
+		if(BROWSER.contains("edge"))
+		{
+			driver= new EdgeDriver();
+		}
+		if(BROWSER.contains("firefox"))
+		{
+			driver= new FirefoxDriver();
+		}
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+		driver.get(URL);
+		Thread.sleep(2000);
+		OrangeHrmLoginpage ol=new OrangeHrmLoginpage(driver);
+		ol.getUser(username);
+		ol.getPass(pass);
+		ol.getSubmit();
+		Thread.sleep(5000);
+		OrangeHrmHomepage o=new OrangeHrmHomepage(driver);
+		o.getRecuritment();
+		OrangeHrmRecruitmentPage o1=new OrangeHrmRecruitmentPage(driver);
+		o1.getAddButton();
+		FileInputStream file=new FileInputStream("src/test/resources/DDT/OrangeHrmRecruitmentpageData.xlsx");
+		Workbook wb = WorkbookFactory.create(file);
+	    Sheet sh=wb.getSheet("Sheet1");
+	    Row row=sh.getRow(1);
+	    Cell cell=row.getCell(0);
+	    String fn=cell.getStringCellValue();
+	    OrangeHrmCandidatesPage oc=new OrangeHrmCandidatesPage(driver);
+		oc.getFn(fn);
+		String mn=wb.getSheet("Sheet1").getRow(1).getCell(1).getStringCellValue();
+		oc.getMn(mn);
+		String ln=wb.getSheet("Sheet1").getRow(1).getCell(2).getStringCellValue();
+		oc.getLn(ln);
+		oc.getVacancyClick();
+		oc.getVacancySelect();
+		String email=wb.getSheet("Sheet1").getRow(1).getCell(3).getStringCellValue();
+		oc.getEmail(email);
+		DataFormatter df=new DataFormatter();
+		String PhoneNo=df.formatCellValue(wb.getSheet("Sheet1").getRow(1).getCell(4));
+     	oc.getPhoneNo(PhoneNo);
+    	String filePath=wb.getSheet("Sheet1").getRow(1).getCell(5).getStringCellValue();
+    	oc.getFile(filePath);
+    	oc.getSave();
+    	oc.getCandidates();
+    	o1.getVacancyCheck();
+    	oc.getVacancySelect();
+    	Thread.sleep(2000);
+    	o1.getHiremanagerClick();
+    	o1.getHiremanagerSelect();
+    	o1.getStatusClick();
+    	o1.getStatus();
+    	o1.getCandidateName(fn);
+    	o1.getSearch();
+    	String fullName= fn+" "+mn+" "+ln;
+    	o1.getRecordFound(fullName);
+	}
+
+}
